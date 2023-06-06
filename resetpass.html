@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function showUser(str) {
+          if (str == "") {
+            document.getElementById("txtHint").innerHTML = "";
+            return;
+          } else {
+            console.log(str);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("txtHint").innerHTML = this.responseText;
+              }
+            };
+            xmlhttp.open("GET","database.php",true);
+            xmlhttp.send();
+          }
+        }
+
+        function changePass() {
+            var str = document.getElementById("email").value;
+          if (str == "") {
+            document.getElementById("reset").style.display = "none";
+            return;
+          } else {
+            console.log(str);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("txtHint").innerHTML = this.responseText;
+              }
+            };
+            xmlhttp.open("GET","database.php?q="+str,true);
+            xmlhttp.send();
+          }
+        }
+        </script>
+</head>
+<body>
+    <!-- <form>
+        <select name="users" onchange="showUser(this.value)">
+          <option value="">Select a person:</option>
+          <option value="Joseph">Joseph</option>
+          <option value="Vincent">Vincent</option>
+          <option value="Jesse">Jesse</option>
+          <option value="Nelson">Nelson</option>
+          </select>
+        </form>
+        <br>
+        <div id="txtHint"><b>Person info will be listed here...</b></div>
+         -->
+        <div id="login" style="display:block">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br><br>
+    
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"><br><br>
+    
+            <input type="submit" value="Login">
+    
+            <button  onclick="resetPass()">Forgot password?</button>
+            <!-- <button  onclick="sendEmail()">Send Email</button> -->
+        </div>
+
+        <div id="reset" style="display:none">
+            <form method="post" action="send_link.php">
+                <p>Enter Email Address To Send Password Link</p>
+                <input type="text" name="email">
+                <input type="submit" name="submit_email">
+              </form>
+
+              <form class="gform" method="POST"  action="https://script.google.com/macros/s/AKfycbw_OERFKmOPxFgrnrtg7KTKdq7z2pPG9-FuQ6WgjY2s/dev">
+    
+    
+                
+                <label for="formGoogleSendEmailtype">email</label>
+                <input type="text" id="formGoogleSendEmailtype" name="formGoogleSendEmailtype"><br><br>
+            
+                <input type="submit">
+                
+                
+                </form>
+        </div>
+</body>
+<script>
+function resetPass(){
+    document.getElementById("login").style.display ="none";
+    document.getElementById("reset").style.display ="block";
+}
+
+</script>
+</html>

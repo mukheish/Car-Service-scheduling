@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
+</head>
+  <style media="screen">
+
+
+.containers {
+  position: absolute;
+  height: 300px;
+  width: 600px;
+  top: 60px;
+  left: calc(50% - 300px);
+  display: flex;
+}
+
+.cards {
+  display: flex;
+  height: 280px;
+  width: 200px;
+  background-color: #17141d;
+  border-radius: 10px;
+
+/*   margin-left: -50px; */
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+}
+
+.cards:not(:first-child) {
+    margin-left: -50px;
+}
+
+.cards:hover {
+  background-color: brown;
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.cards:hover ~ .cards {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}
+
+.title {
+  color: white;
+  font-weight: 300;
+  position: absolute;
+  left: 20px;
+  top: 15px;
+}
+
+.bar {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  height: 5px;
+  width: 150px;
+}
+
+.emptybar {
+  background-color: #2e3033;
+  width: 100%;
+  height: 100%;
+}
+
+.filledbar {
+  position: absolute;
+  top: 0px;
+  z-index: 3;
+  width: 0px;
+  height: 100%;
+  background: rgb(0,154,217);
+  background: linear-gradient(90deg, rgba(0,154,217,1) 0%, rgba(217,147,0,1) 65%, rgba(255,186,0,1) 100%);
+  transition: 0.6s ease-out;
+}
+
+.cards:hover .filledbar {
+  width: 120px;
+  transition: 0.4s ease-out;
+}
+
+
+.stroke {
+  stroke: white;
+  stroke-dasharray: 360;
+  stroke-dashoffset: 360;
+  transition: 0.6s ease-out;
+}
+
+svg {
+  fill: #17141d;
+  stroke-width: 2px;
+}
+
+.cards:hover .stroke {
+  stroke-dashoffset: 100;
+  transition: 0.6s ease-out;
+}
+
+  </style>
+<body>
+<div class="containers" style="margin-top: 80px;">
+
+  <div class="cards">
+    <h3 class="title">My Profile</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div><br>
+      <a class="cards-footer text-white clearfix small z-1" href="user-view-profile.php" style="color: white;">
+                <span class="float-left">View Details</span>
+                <span class="float-right">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+              </a>
+    </div>
+
+    <div >
+      <img src="my profile.png" alt="" style="
+      width: 70px;
+      margin-top: 170px;
+      margin-left: 59px;
+      " margin-left:100px;="">
+    </div>
+
+  </div>
+
+
+  <div class="cards">
+    <h3 class="title">New Booking</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div><br>
+
+      <a class="cards-footer text-white clearfix small z-1" href="user-view-booking.php" style="color: white;">
+                <span class="float-left">Book Now</span>
+                <span class="float-right">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+              </a>
+
+    </div>
+
+
+                <div >
+                  <img src="new booking.png" alt="" style="
+                  width: 80px;
+                  margin-top: 162px;
+                  margin-left: 55px;
+                  " margin-left:100px;="">
+                </div>
+  </div>
+
+
+  <div class="cards">
+    <h3 class="title">Manage Booking</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div><br>
+
+      <a class="cards-footer text-white clearfix small z-1" href="user-manage-booking.php" style="color: white;">
+                <span class="float-left">View Details</span>
+                <span class="float-right">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+              </a>
+
+    </div>
+
+    <div >
+      <img src="booking.png" alt="" style="
+      width: 100px;
+      margin-top: 162px;
+      margin-left: 55px;
+      " margin-left:100px;="">
+    </div>
+
+  </div>
+
+
+  <div class="cards">
+    <h3 class="title">Feedback</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div><br>
+
+      <a class="cards-footer text-white clearfix small z-1" href="user-give-feedback.php" style="color: white;">
+                <span class="float-left">Give Your Feedback Now</span>
+                <span class="float-right">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+              </a>
+    </div>
+
+    <div >
+      <img src="feedback.png" alt="" style="
+      width: 100px;
+      margin-top: 162px;
+      margin-left: 55px;
+      " margin-left:100px;="">
+    </div>
+
+  </div>
+
+
+</div>
+</body>
+</html>

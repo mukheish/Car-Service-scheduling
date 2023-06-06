@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot password</title>
+    <script src=
+    "https://smtpjs.com/v3/smtp.js">
+  </script>
+  
+  <!-- <script type="text/javascript">
+    function sendEmail() {
+      Email.send({
+        Host: "smtp.gmail.com",
+        Username: "jackstevens382@gmail.com",
+        Password: "reddeadredemption",
+        To: 'mukheishrao@gmail.com',
+        From: "jackstevens382@gmail.com",
+        Subject: "Sending Email using javascript",
+        Body: "Well that was easy!!",
+      })
+        .then(function (message) {
+          alert("mail sent successfully")
+        });
+    }
+  </script> -->
+</head>
+<body>
+    <div>
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username"><br><br>
+
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password"><br><br>
+
+		<input type="submit" value="Login">
+
+        <button  onclick="resetPass()">Forgot password?</button>
+        <button  onclick="sendEmail()">Send Email</button>
+	</div>
+  <form class="gform" method="POST"  action="https://script.google.com/macros/s/AKfycbxmcngqWyB9JaBtCeKBQGLCAYGsDQSgdDxshLGZ4TcQeQUzqIlAFLnK-j9wPpJqon0f-A/exec">
+    
+    
+    <label for="formGoogleSendEmailtype">jackstevens382@gmail.com</label>
+		<input type="text" id="formGoogleSendEmailtype" name="formGoogleSendEmailtype" value="jackstevens382@gmail.com">
+    <label for="formGoogleSendEmailtype">email</label>
+		<input type="text" id="formGoogleSendEmailtype" name="formGoogleSendEmailtype"><br><br>
+
+    <input type="submit">
+    
+    
+    </form>
+<button onclick="sendData()">send the emails</button>
+</body>
+</html>
+
+<script>
+// function sendData(){
+// action("https://script.google.com/macros/s/AKfycbyepUGf_Q0qraDQ57WW3_AeLSArP97dsBI1-ZeYvvPZi7Bw9zqKQXNyLjWT0-dUNck6/exec", {
+//   method: "POST",
+//   body: JSON.stringify({
+//     userId: 1,
+//     title: "Fix my bugs",
+//     formGoogleSendEmailtype: "mukheishrao@gmail.com"
+//   }),
+//   headers: {
+//     "Content-type": "application/json; charset=UTF-8"
+//   }
+// })
+//   .then((response) => response.json())
+//   .then((json) => console.log(json));
+// }
+
+function resetPass(){
+console.log("reset password");
+}
+</script>
