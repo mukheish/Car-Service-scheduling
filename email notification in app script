@@ -1,0 +1,290 @@
+/******************************************************************************
+ * This tutorial is based on the work of Martin Hawksey twitter.com/mhawksey  *
+ * But has been simplified and cleaned up to make it more beginner friendly   *
+ * All credit still goes to Martin and any issues/complaints/questions to me. *
+ ******************************************************************************/
+
+// if you want to store your email server-side (hidden), uncomment the next line
+// var TO_ADDRESS = "example@email.net";
+
+// spit out all the keys/values from the form in HTML for email
+// uses an array of keys if provided or the object to determine field order
+function formatMailBody(obj, order) {
+  var result = "";
+  if (!order) {
+    order = Object.keys(obj);
+  }
+  
+  // loop over all keys in the ordered form data
+  for (var idx in order) {
+    var key = order[idx];
+    result += "<h4 style='text-transform: capitalize; margin-bottom: 0'>" + key + "</h4><div>" + sanitizeInput(obj[key]) + "</div>";
+    // for every key, concatenate an `<h4 />`/`<div />` pairing of the key name and its value, 
+    // and append it to the `result` string created at the start.
+  }
+  return result; // once the looping is done, `result` will be one long string to put in the email body
+}
+
+// sanitize content from the user - trust no one 
+// ref: https://developers.google.com/apps-script/reference/html/html-output#appendUntrusted(String)
+function sanitizeInput(rawInput) {
+   var placeholder = HtmlService.createHtmlOutput(" ");
+   placeholder.appendUntrusted(rawInput);
+  
+   return placeholder.getContent();
+ }
+
+function emailReminder(){
+
+  var doc = SpreadsheetApp.getActiveSpreadsheet();
+  //var sheetName = e.parameters.formGoogleSheetName || "responses";
+  var sheet = doc.getSheetByName("responses");
+    
+  var item = sheet.getRange(2, 1, 1, sheet.getLastColumn()).getValues();
+
+  for(var i=0; item.length>i; i++){
+
+  }
+  console.log(item[0][1]);
+
+  // today's date information
+  var today = new Date();
+  var todayMonth = today.getMonth() + 1;
+  var todayDay = today.getDate();
+  var todayYear = today.getFullYear();
+
+  // 2 weeks from now
+  var twoWeeksFromToday = new Date();
+  twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 1); //1 day before
+  var twoWeeksMonth = twoWeeksFromToday.getMonth() + 1;
+  var twoWeeksDay = twoWeeksFromToday.getDate();
+  var twoWeeksYear = twoWeeksFromToday.getFullYear();
+  
+  // 1 month from now 
+  var newToday = new Date()
+  var oneMonthFromToday = new Date(newToday.setMonth(newToday.getMonth()+1));
+  var oneMonthMonth = oneMonthFromToday.getMonth() + 1;
+  var oneMonthDay = oneMonthFromToday.getDate();
+  var oneMonthYear = oneMonthFromToday.getFullYear();
+
+  // getting data from spreadsheet
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var startRow = 2; // First row of data to process
+  var numRows = 100; // Number of rows to process
+
+  var dataRange = sheet.getRange(startRow, 1, numRows, 999);
+  var data = dataRange.getValues();
+
+  //looping through all of the rows
+  for (var i = 0; i < data.length; ++i) {
+    var row = data[i];
+
+    var expireDateFormat = Utilities.formatDate(
+      new Date(row[6]),
+      'ET',
+      'MM/dd/yyyy'
+    );
+
+    // email information
+    var subject = '';
+    var message =
+      ' You have a service appointment due in 1 day. ' +
+      '\n' +
+      ' Name: ' +
+      row[2] +
+      '\n' +
+      ' Approval Status: ' +
+      row[4] +
+      '\n' +
+      ' Car Model: ' +
+      row[3] +
+      '\n' +
+      ' Time: ' +
+      row[9] +
+      '\n' +
+      ' Special Request: ' +
+      row[6] +
+      '\n' +
+      ' Mechanic: ' +
+      row[7] ;
+      
+
+    //expiration date information
+    var expireDateMonth = new Date(row[5]).getMonth() + 1;
+    var expireDateDay = new Date(row[5]).getDate();
+    var expireDateYear = new Date(row[5]).getFullYear();
+
+    //checking for today
+    // if (
+    //   expireDateMonth === todayMonth &&
+    //   expireDateDay === todayDay &&
+    //   expireDateYear === todayYear
+    // ) {
+    //   var subject =
+    //     'A license expired today: ' + row[7] + ' - ' + expireDateFormat;
+    //   MailApp.sendEmail('subscriptionscript@gmail.com', subject, message);
+    //   console.log('todayyyy!');
+    // }
+
+    //checking for 2 weeks from now (3 days)
+
+    console.log('2 weeks month, expire month' + twoWeeksMonth + expireDateMonth);
+    if (
+      expireDateMonth === twoWeeksMonth &&
+      expireDateDay === twoWeeksDay &&
+      expireDateYear === twoWeeksYear
+    ) {
+      var subject =
+        'You have a service appointment due in 1 day: ' +
+        row[5];
+      MailApp.sendEmail(row[1], subject, message);
+      console.log('2 weeks from now');
+    }
+
+    //checking for 1 month from now
+    // if (
+    //   expireDateMonth === oneMonthMonth &&
+    //   expireDateDay === oneMonthDay &&
+    //   expireDateYear === oneMonthYear
+    // ) {
+    //   var subject =
+    //     'A license is expiring in 1 month: ' +
+    //     row[7] +
+    //     ' - ' +
+    //     expireDateFormat;
+    //   MailApp.sendEmail('subscriptionscript@gmail.com', subject, message);
+    //   Logger.log('1 month from now');
+    // }
+  }
+
+}
+
+function doPost(e) {
+var html ="";
+  try {
+    Logger.log(e); // the Google Script version of console.log see: Class Logger
+    record_data(e);
+    console.log(e);
+    // shorter name for form data
+    var mailData = e.parameters;
+    var mail = String(mailData.formGoogleSendEmailtype);
+    // names and order of form elements (if set)
+    var orderParameter = e.parameters.formDataNameOrder;
+    var dataOrder;
+    if (orderParameter) {
+      dataOrder = JSON.parse(orderParameter);
+    }
+
+    // determine recepient of the email
+    // if you have your email uncommented above, it uses that `TO_ADDRESS`
+    // otherwise, it defaults to the email provided by the form's data attribute
+    var date = mailData.formGoogleSendEmailDate;
+    var time = mailData.formGoogleSendEmailTime;
+    var emai = mailData.formGoogleSendEmailtype;
+    var resp = JSON.stringify(emai);
+    //var newString = resp.replace('`\`', '');
+    //console.log(newString);
+    // send email if to address is set
+    // if (emai) {
+    //   MailApp.sendEmail({
+    //     to: String(mailData.formGoogleSendEmailtype),
+    //     subject: "Password reset for Vehicle Booking System",
+    //     // replyTo: String(mailData.email), // This is optional and reliant on your form actually collecting a field named `email`
+    //     htmlBody: "Please click the following link to reset and create a new password for your account\n"+"http://localhost/flone/usr/reset_pass.php?email="+mail
+    //   });
+    // }
+
+
+
+  } catch(error) { // if error return this
+    Logger.log(error);
+    return ContentService
+          .createTextOutput(JSON.stringify({"result":"error", "error": error}))
+          .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+
+/**
+ * record_data inserts the data received from the html form submission
+ * e is the data received from the POST
+ */
+function record_data(e) {
+  var lock = LockService.getDocumentLock();
+  lock.waitLock(30000); // hold off up to 30 sec to avoid concurrent writing
+  
+  try {
+    Logger.log(JSON.stringify(e)); // log the POST data in case we need to debug it
+    
+    // select the 'responses' sheet by default
+    var doc = SpreadsheetApp.getActiveSpreadsheet();
+    var sheetName = e.parameters.formGoogleSheetName || "responses";
+    var sheet = doc.getSheetByName(sheetName);
+    var mailData = e.parameters;
+
+    var oldHeader = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    var newHeader = oldHeader.slice();
+    var fieldsFromForm = getDataColumns(e.parameters);
+    var emai = mailData.formGoogleSendEmailtype;
+    
+    var row = [new Date()]; // first element in the row should always be a timestamp
+    
+    // loop through the header columns
+    for (var i = 1; i < oldHeader.length; i++) { // start at 1 to avoid Timestamp column
+      var field = oldHeader[i];
+      var output = getFieldFromData(field, e.parameters);
+      row.push(output);
+      
+      // mark as stored by removing from form fields
+      var formIndex = fieldsFromForm.indexOf(field);
+      if (formIndex > -1) {
+        fieldsFromForm.splice(formIndex, 1);
+      }
+    }
+    
+    // set any new fields in our form
+    for (var i = 0; i < fieldsFromForm.length; i++) {
+      var field = fieldsFromForm[i];
+      var output = getFieldFromData(field, e.parameters);
+      row.push(output);
+      newHeader.push(field);
+    }
+    
+    // more efficient to set values as [][] array than individually
+    var nextRow = sheet.getLastRow() + 1; // get next row
+    sheet.getRange(nextRow, 1, 1, row.length).setValues([row]);
+
+    // update header row with any new data
+    if (newHeader.length > oldHeader.length) {
+      sheet.getRange(1, 1, 1, newHeader.length).setValues([newHeader]);
+    }
+    if (emai) {
+      MailApp.sendEmail({
+        to: String(mailData.formGoogleSendEmailtype),
+        subject: "Your service appoint for Car Service Management System has been approved",
+        // replyTo: String(mailData.email), // This is optional and reliant on your form actually collecting a field named `email`
+        htmlBody: "Your appointment Booking will on: "+mailData.formGoogleSendEmailDate+" at "+mailData.formGoogleSendEmailTime
+      });
+    }
+  }
+  catch(error) {
+    Logger.log(error);
+  }
+  finally {
+    lock.releaseLock();
+    return;
+  }
+
+}
+
+function getDataColumns(data) {
+  return Object.keys(data).filter(function(column) {
+    return !(column === 'formDataNameOrder' || column === 'formGoogleSheetName' || column === 'formGoogleSendEmail' || column === 'honeypot');
+  });
+}
+
+function getFieldFromData(field, data) {
+  var values = data[field] || '';
+  var output = values.join ? values.join(', ') : values;
+  return output;
+}
